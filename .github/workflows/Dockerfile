@@ -1,16 +1,27 @@
-## Stage 1 : build with maven builder image with native capabilities
-FROM quay.io/quarkus/centos-quarkus-maven:19.3.1-java11 AS build
-COPY src /usr/src/app/src
-COPY pom.xml /usr/src/app
-USER root
-RUN chown -R quarkus /usr/src/app
-USER quarkus
-RUN mvn -f /usr/src/app/pom.xml -Pnative clean package
-
-## Stage 2 : create the docker final image
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+####
+# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode
+#
+# Before building the container image run:
+#
+# ./mvnw package -Pnative
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.native -t quarkus/hello .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/hello
+#
+###
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4
 WORKDIR /work/
-COPY --from=build /usr/src/app/target/*-runner /work/application
-RUN chmod 775 /work
-EXPOSE 8080
+RUN chown 1001 /work \
+    && chmod "g+rwX" /work \
+    && chown 1001:root /work
+COPY --chown=1001:root target/*-runner /work/application
+
+EXPOSE 1314
+USER 1001
+
 CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
