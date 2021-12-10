@@ -1,5 +1,5 @@
 ## Stage 1 : build with maven builder image with native capabilities
-FROM quay.io/quarkus/centos-quarkus-maven:21.3.0-java17 AS build
+FROM quay.io/quarkus/centos-quarkus-maven:21.3.0-java11 AS build
 COPY src /usr/src/app/src
 COPY pom.xml /usr/src/app
 USER root
