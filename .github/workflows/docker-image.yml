@@ -16,6 +16,6 @@ jobs:
           # 登录阿里云镜像仓库
           docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
           # 使用Dockerfile构建镜像
-          docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/sunrise2021/hello:0.0.1
+          docker build . --file src/main.docker/Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/sunrise2021/hello:0.0.1
           # 推送镜像到镜像仓库
           docker push registry.cn-hangzhou.aliyuncs.com/sunrise2021/hello:0.0.1
